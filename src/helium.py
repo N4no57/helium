@@ -2196,7 +2196,7 @@ def run(fn, text, debug=False):
 
 
 def version():
-    VERSION = "0.8.1"
+    VERSION = "0.8.2"
     return VERSION
 
 
