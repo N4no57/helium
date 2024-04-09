@@ -1,0 +1,11 @@
+09/04/2024
+Helium 0.8.2
+
+# Fixed
+ - bug fix: escape characters not being handled properly
+
+09/04/2024
+Helium 0.8.1
+
+# Fixed
+ - bug fix: function problems after '{' with multiline statements
