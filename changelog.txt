@@ -1,3 +1,10 @@
+09/04/20204
+Helium 0.9.0
+
+# Added
+ - f strings are now in place and usable under the syntax f"whatever your string is {variable}"
+ - dictionaries are now implemented under syntax map IDENTIFIER = {<Key>: <Value>}
+
 09/04/2024
 Helium 0.8.2
 
