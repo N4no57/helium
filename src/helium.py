@@ -619,7 +619,7 @@ class Parser:
 
     ###################################
 
-    def func_def(self):
+    def func_def(self):  # TODO fix function multiline code
         res = ParseResult()
 
         if not self.current_tok.matches(TT_KEYWORD, 'func'):
