@@ -290,7 +290,7 @@ class Lexer:
             't': '\t'
         }
 
-        while self.current_char != None and (self.current_char != '"' or escape_character):
+        while self.current_char is not None and (self.current_char != '"' or escape_character):
             if escape_character:
                 string += escape_characters.get(self.current_char, self.current_char)
             else:
@@ -315,7 +315,7 @@ class Lexer:
             "t": "\t"
         }
 
-        while self.current_char != None and (self.current_char != "'" or escape_character):
+        while self.current_char is not None and (self.current_char != "'" or escape_character):
             if escape_character:
                 string += escape_characters.get(self.current_char, self.current_char)
             else:
