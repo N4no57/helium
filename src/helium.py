@@ -686,17 +686,26 @@ class Parser:
 
         thing0 = '{'
         thing = '}'
-        if self.current_tok.type == TT_LCB:
+        if not self.current_tok.type == TT_LCB:
+            return res.failure(InvalidSyntaxError(
+                self.current_tok.pos_start, self.current_tok.pos_end,
+                f"Expected '{thing}'"
+            ))
+
+        res.register_advancement()
+        self.advance()
+
+        if self.current_tok.type == TT_NEWLINE:
             res.register_advancement()
             self.advance()
 
-            node_to_return = res.register(self.expr())
+            body = res.register(self.statements())
             if res.error: return res
 
             if not self.current_tok.type == TT_RCB:
                 return res.failure(InvalidSyntaxError(
                     self.current_tok.pos_start, self.current_tok.pos_end,
-                    f"Expected '{thing}'"
+                    f"Expected '{thing0}'"
                 ))
 
             res.register_advancement()
@@ -705,20 +714,11 @@ class Parser:
             return res.success(FuncDefNode(
                 var_name_tok,
                 arg_name_toks,
-                node_to_return,
+                body,
                 False
             ))
 
-        if not self.current_tok.type == TT_NEWLINE:
-            return res.failure(InvalidSyntaxError(
-                self.current_tok.pos_start, self.current_tok.pos_end,
-                f"Expected '{{' or newline"
-            ))
-
-        res.register_advancement()
-        self.advance()
-
-        body = res.register(self.statements())
+        body = res.register(self.expr())
         if res.error: return res
 
         if not self.current_tok.type == TT_RCB:
