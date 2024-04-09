@@ -332,35 +332,39 @@ class Lexer:
         self.advance()
         return Token(TT_STRING, string, pos_start, self.pos)
 
-    def make_f_string(self):
+    def make_string_f(self):
         string = ''
         pos_start = self.pos.copy()
         escape_character = False
-        expressions = []
-        self.advance() # move to next character after 'f'
+        self.advance()  # Move to the next character after 'f'
 
         escape_characters = {
-            "n": "\n",
-            "t": "\t"
+            'n': '\n',
+            't': '\t'
         }
 
-        if self.current_char == '"':
-            while self.current_char is not None and (self.current_char != '"' or escape_character):
+        if self.current_char in ('"', "'"):
+            quote_char = self.current_char  # Store the quote character
+            while self.current_char is not None and (self.current_char != quote_char or escape_character):
                 if escape_character:
                     string += escape_characters.get(self.current_char, self.current_char)
                     escape_character = False
                 else:
-                    if self.current_char == '\\':
+                    if self.current_char == "\\":
                         escape_character = True
                     else:
                         string += self.current_char
                 self.advance()
                 escape_character = False
 
-            self.advance() # Move to the next character after the closing double quote
+            if self.current_char != quote_char:
+                # String was not properly closed
+                raise Exception("String is not properly closed")
+
+            self.advance()  # Move to the next character after the closing quote
             return Token(TT_STRING, string, pos_start, self.pos)
 
-        return None # Return None if f string not closed properly
+        return None  # Return None if the string is not properly started
 
     def make_identifier(self):
         id_str = ''
