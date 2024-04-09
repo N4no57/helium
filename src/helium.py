@@ -106,6 +106,7 @@ class Position:
 TT_INT = 'INT'
 TT_FLOAT = 'FLOAT'
 TT_STRING = 'STRING'
+TT_FSTRING = 'FSTRING'
 TT_IDENTIFIER = 'IDENTIFIER'
 TT_KEYWORD = 'KEYWORD'
 TT_PLUS = 'PLUS'
@@ -203,6 +204,8 @@ class Lexer:
                 tokens.append(self.make_number())
             elif self.current_char in LETTERS:
                 tokens.append(self.make_identifier())
+            elif self.current_char == "f":
+                tokens.append(self.make_f_string())
             elif self.current_char == '"':
                 tokens.append(self.make_string_DQ())
             elif self.current_char == "'":
@@ -328,6 +331,36 @@ class Lexer:
 
         self.advance()
         return Token(TT_STRING, string, pos_start, self.pos)
+
+    def make_f_string(self):
+        string = ''
+        pos_start = self.pos.copy()
+        escape_character = False
+        expressions = []
+        self.advance() # move to next character after 'f'
+
+        escape_characters = {
+            "n": "\n",
+            "t": "\t"
+        }
+
+        if self.current_char == '"':
+            while self.current_char is not None and (self.current_char != '"' or escape_character):
+                if escape_character:
+                    string += escape_characters.get(self.current_char, self.current_char)
+                    escape_character = False
+                else:
+                    if self.current_char == '\\':
+                        escape_character = True
+                    else:
+                        string += self.current_char
+                self.advance()
+                escape_character = False
+
+            self.advance() # Move to the next character after the closing double quote
+            return Token(TT_STRING, string, pos_start, self.pos)
+
+        return None # Return None if f string not closed properly
 
     def make_identifier(self):
         id_str = ''
